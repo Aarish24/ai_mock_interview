@@ -228,3 +228,193 @@ export const dummyInterviews: Interview[] = [
     createdAt: "2024-03-14T15:30:00Z",
   },
 ];
+
+export const generator =
+{
+  "name": "aarish_interview_prep",
+    "nodes": [
+  {
+    "name": "start",
+    "type": "conversation",
+    "isStart": true,
+    "metadata": {
+      "position": {
+        "x": -441.6216049132745,
+        "y": -118.36743880955402
+      }
+    },
+    "prompt": "Greet the user and help them create a new AI Interviewer.",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "voice": {
+      "model": "aura-2",
+      "voiceId": "thalia",
+      "provider": "deepgram"
+    },
+    "variableExtractionPlan": {
+      "output": [
+        {
+          "enum": [],
+          "type": "string",
+          "title": "level",
+          "description": "The job experience level."
+        },
+        {
+          "enum": [],
+          "type": "number",
+          "title": "amount",
+          "description": "How many questions would you like to generate?"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "techstack",
+          "description": "A list of technologies to cover during the job interview. For example, React, Next.js, Express.js, Node and so on…"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "role",
+          "description": "What role should would you like to train for? For example Frontend, Backend, Fullstack, Design, UX?"
+        },
+        {
+          "enum": [],
+          "type": "string",
+          "title": "type",
+          "description": "What type of the interview should it be?"
+        }
+      ]
+    },
+    "messagePlan": {
+      "firstMessage": "Hey there!"
+    }
+  },
+  {
+    "name": "node_1748112538174",
+    "type": "conversation",
+    "metadata": {
+      "position": {
+        "x": -440.7430550142695,
+        "y": 171.82940592974518
+      }
+    },
+    "prompt": "Say that the Interview will be generated shortly",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "messagePlan": {
+      "firstMessage": ""
+    }
+  },
+  {
+    "name": "node_1748112580034",
+    "type": "apiRequest",
+    "metadata": {
+      "position": {
+        "x": -439.1666666666667,
+        "y": 409.4791650772094
+      }
+    },
+    "method": "POST",
+    url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/generate`,
+    "headers": {
+      "type": "object",
+      "properties": {}
+    },
+    "body": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "value": "{{role}}",
+          "description": ""
+        },
+        "type": {
+          "type": "string",
+          "value": "{{type}}",
+          "description": ""
+        },
+        "level": {
+          "type": "string",
+          "value": "{{level}}",
+          "description": ""
+        },
+        "amount": {
+          "type": "string",
+          "value": "{{amount}}",
+          "description": ""
+        },
+        "userid": {
+          "type": "string",
+          "value": "{{userid}}",
+          "description": ""
+        },
+        "techstack": {
+          "type": "string",
+          "value": "{{techstack}}",
+          "description": ""
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {}
+    },
+    "mode": "blocking",
+    "hooks": []
+  },
+  {
+    "name": "node_1748112999012",
+    "type": "conversation",
+    "metadata": {
+      "position": {
+        "x": -440.16507484941377,
+        "y": 680.6820518310045
+      }
+    },
+    "prompt": "Thanks the user for the conversation and inform them that the interview has been generated successfully.",
+    "model": {
+      "model": "gpt-4o",
+      "provider": "openai",
+      "maxTokens": 1000,
+      "temperature": 0.7
+    },
+    "messagePlan": {
+      "firstMessage": ""
+    }
+  }
+],
+    "edges": [
+  {
+    "from": "start",
+    "to": "node_1748112538174",
+    "condition": {
+      "type": "ai",
+      "prompt": "if user provided all the required variables"
+    }
+  },
+  {
+    "from": "node_1748112538174",
+    "to": "node_1748112580034",
+    "condition": {
+      "type": "ai",
+      "prompt": ""
+    }
+  },
+  {
+    "from": "node_1748112580034",
+    "to": "node_1748112999012",
+    "condition": {
+      "type": "ai",
+      "prompt": ""
+    }
+  }
+]
+}
