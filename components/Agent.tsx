@@ -63,13 +63,13 @@ const Agent = ({userName,userId,type}:AgentProps) => {
             router.push('/');
         }
 
-    }, [messages, callStatus, type, userId, router]);
+    }, [messages, callStatus, type, userId]);
 
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
         await vapi.start(generator, {
-            variables: {
+            variableValues: {
                 username: userName,
                 userid: userId
             }

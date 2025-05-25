@@ -47,6 +47,13 @@ interface InterviewCardProps {
   createdAt?: string;
 }
 
+interface Message {
+  type: string;
+  transcriptType?: string;
+  role?: 'user' | 'system' | 'assistant';
+  transcript?: string;
+}
+
 interface AgentProps {
   userName: string;
   userId?: string;
