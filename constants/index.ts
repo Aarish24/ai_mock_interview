@@ -1,5 +1,5 @@
-// import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
-// import { z } from "zod";
+import { CreateAssistantDTO, CreateWorkflowDTO } from "@vapi-ai/web/dist/api";
+import { z } from "zod";
 
 export const mappings = {
   "react.js": "react",
@@ -229,7 +229,7 @@ export const dummyInterviews: Interview[] = [
   },
 ];
 
-export const generator ={
+export const generator : CreateWorkflowDTO ={
   "name": "aarish_interview_prep",
   "nodes": [
     {
@@ -330,7 +330,7 @@ export const generator ={
         }
       },
       "method": "POST",
-      "url": "https://ai-mock-interview-roan-phi.vercel.app/api/vapi/generate",
+      "url": `${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/generate`,
       "headers": {
         "type": "object",
         "properties": {}

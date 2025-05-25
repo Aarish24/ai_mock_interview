@@ -68,12 +68,18 @@ const Agent = ({userName,userId,type}:AgentProps) => {
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
-        await vapi.start(generator, {
-            variableValues: {
-                username: userName,
-                userid: userId
-            }
-        });
+        await vapi.start(
+            undefined,
+            {
+                variableValues: {
+                    username: userName,
+                    userid: userId,
+                },
+                clientMessages: ["transcript"],
+                serverMessages: [],
+            },
+            undefined,
+            generator);
     }
     
     const handleDisconnect = async()=>{
