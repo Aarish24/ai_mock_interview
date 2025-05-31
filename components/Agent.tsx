@@ -5,7 +5,7 @@ import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {useRouter} from "next/navigation";
 import {vapi} from "@/lib/vapi.sdk";
-import {generator} from "@/constants";
+import {generator, interviewer} from "@/constants";
 
 enum CallStatus{
     INACTIVE = "INACTIVE",
@@ -20,7 +20,7 @@ interface SavedMessages{
 }
 
 
-const Agent = ({userName,userId,type}:AgentProps) => {
+const Agent = ({userName,userId,type,interviewId,questions}:AgentProps) => {
     const router = useRouter();
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -58,9 +58,32 @@ const Agent = ({userName,userId,type}:AgentProps) => {
 
     }, []);
 
+    const handleGenrateFeedback = async(messages:SavedMessages[])=>{
+        console.log('generate feedback here');
+
+        const {success,id} = {
+            success:true,
+            id:'feedback-id'
+        }
+
+        if(success && id){
+            router.push(`/interview/${interviewId}/feedback`)
+        }
+        else{
+            console.error("Failed to generate feedback");
+            router.push('/');
+        }
+
+    }
+
     useEffect(() => {
         if (callStatus === CallStatus.FINISHED) {
-            router.push('/');
+            if(type=='generate'){
+                router.push('/');
+            }
+            else{
+                handleGenrateFeedback(messages);
+            }
         }
 
     }, [messages, callStatus, type, userId]);
@@ -68,18 +91,34 @@ const Agent = ({userName,userId,type}:AgentProps) => {
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
-        await vapi.start(
-            undefined,
-            {
-                variableValues: {
-                    username: userName,
-                    userid: userId,
+        if(type==='generate'){
+            await vapi.start(
+                undefined,
+                {
+                    variableValues: {
+                        username: userName,
+                        userid: userId,
+                    },
+                    clientMessages: ["transcript"],
+                    serverMessages: [],
                 },
-                clientMessages: ["transcript"],
-                serverMessages: [],
-            },
-            undefined,
-            generator);
+                undefined,
+                generator);
+        }
+        else{
+            let formattedQuestions='';
+            if(questions){
+                formattedQuestions = questions.map((question)=> `- ${question}`).join('\n');
+            }
+
+            await vapi.start(interviewer,{
+                variableValues:{
+                    questions:formattedQuestions,
+                }
+            })
+        }
+
+
     }
     
     const handleDisconnect = async()=>{

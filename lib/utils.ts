@@ -23,20 +23,22 @@ const checkIconExists = async (url: string) => {
 };
 
 export const getTechLogos = async (techArray: string[] | string | undefined) => {
-  // Handle cases where techArray is undefined, null, or not an array
+  // Handle cases where techArray is undefined or null
   if (!techArray) return [];
   
-  // Convert to array if it's a single string
+  // Ensure we're working with an array
   const techs = Array.isArray(techArray) ? techArray : [techArray];
   
+  // Process each tech in the array
   const logoURLs = techs.map((tech) => {
+    if (!tech) return null; // Skip null/undefined items
     const normalized = normalizeTechName(tech);
     return {
       tech,
       url: `${techIconBaseURL}/${normalized}/${normalized}-original.svg`,
     };
-  });
-
+  }).filter(Boolean); // Remove any null items
+  
   const results = await Promise.all(
     logoURLs.map(async ({ tech, url }) => ({
       tech,
